@@ -2,6 +2,7 @@ import JWT, { Jwt, Secret } from "jsonwebtoken";
 import express, { NextFunction, Request, Response } from "express";
 import http from "http";
 import "dotenv/config";
+import AppError from "../../modules/models/AppError";
 
 interface IAuthentication {
   authUsuario(
@@ -9,10 +10,10 @@ interface IAuthentication {
     res: Response,
     next: NextFunction
   ): Response | NextFunction;
-  create(payload: IpayloadRole): JWT.Secret | boolean;
+  create(payload: JwtPayload): JWT.Secret | boolean;
 }
 
-type IpayloadRole = {
+type JwtPayload = {
   email: string;
   role: string | number;
 };
@@ -33,17 +34,24 @@ class Authentication implements IAuthentication {
     }
     try {
       const secret: string = process.env.SECRET || "";
-      const { payload } = JWT.verify(token, secret);
-      next();
+      const { email, role } = JWT.verify(token, secret) as JwtPayload;
+      if (role === "usuario") {
+        return next();
+      }
+      return res.status(401).json(new AppError(401).getMessageError());
     } catch (error) {
       console.log(error);
-      return res.send(200);
+      return res.status(401).json(new AppError(401).getMessageError());
     }
   }
-  create(payload: IpayloadRole): JWT.Secret | boolean {
+  create(payload: JwtPayload): JWT.Secret | boolean {
     try {
       const secret: string = process.env.SECRET || "";
-      const hash = JWT.sign({ payload }, secret, { expiresIn: "1800s" });
+      const hash = JWT.sign(
+        { email: payload.email, role: payload.role },
+        secret,
+        { expiresIn: "1800s" }
+      );
       return hash;
     } catch (error) {
       console.log(error);
