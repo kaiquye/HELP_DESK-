@@ -1,16 +1,56 @@
 import express, { Request, Response } from "express";
+import AppError from "../models/AppError";
 import { IUsuario } from "./interface-usuario";
+import Services from "./services-usuario";
+import http from "http";
 
 interface Controller<T> {
-  create(usuario: T): Promise<Response>;
-  findAll(): Promise<T[]>;
+  create(req: Request, res: Response): Promise<Response>;
+  findAll(req: Request, res: Response): Promise<Response>;
 }
 
 class ControllerUsuario implements Controller<IUsuario> {
-    create(usuario: IUsuario): Promise<express.Response<any, Record<string, any>>> {
-        throw new Error("Method not implemented.");
+  async create(req: Request, res: Response): Promise<Response> {
+    try {
+      if (!req.body) {
+        return res.status(400).json({ ok: false, message: "invalid body" });
+      }
+      if (
+        !req.body.nome ||
+        !req.body.email ||
+        !req.body.tel ||
+        !req.body.cargo ||
+        !req.body.password
+      ) {
+        return res.status(400).json({ ok: false, message: "Invalid args" });
+      }
+      const response = await Services.create(req.body);
+      if (response instanceof AppError) {
+        return res
+          .status(Number(response.Status))
+          .json(response.getMessageError());
+      }
+      return res.status(201).json({
+        ok: true,
+        message: " Usuario criado com sucesso ",
+        status_code: http.STATUS_CODES[201],
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(new AppError(500).getMessageError());
     }
-    findAll(): Promise<IUsuario[]> {
-        throw new Error("Method not implemented.");
+  }
+  async findAll(req: Request, res: Response): Promise<Response> {
+    try {
+      const response = await Services.findAll();
+      return res.status(200).json({
+        ok: true,
+        message: "todos usuarios",
+        data: response,
+      });
+    } catch (error) {
+      return res.status(500).json(new AppError(500).getMessageError());
     }
+  }
 }
+export default new ControllerUsuario();

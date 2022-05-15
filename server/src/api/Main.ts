@@ -2,6 +2,7 @@ const express = require("express");
 import ConfigCors from "./middleware/Cors";
 import Routes_Administrador from "./routes/administrador";
 import Routes_Chamados from "./routes/chamados";
+import Routes_Usuario from "./routes/usuario";
 import HelmetConfig from "./middleware/helmet";
 
 class Main {
@@ -21,7 +22,8 @@ class Main {
 
   private Routes(): void {
     this.App.use("/administrador", Routes_Administrador);
-    this.App.use("/chamados", Routes_Chamados);
+    this.App.use("/chamado", Routes_Chamados);
+    this.App.use("/usuario", Routes_Usuario);
   }
 }
 module.exports = new Main().App;
