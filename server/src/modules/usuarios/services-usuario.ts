@@ -7,9 +7,28 @@ interface Services<T> {
   create(usuario: T): Promise<boolean | AppError>;
   findAll(): Promise<T[]>;
   delete(id: number): Promise<boolean>;
+  login(email: string, password: string): Promise<object | AppError>;
 }
 
 class ServicesUsuario implements Services<IUsuario> {
+  async login(email: string, password: string): Promise<object | AppError> {
+    try {
+      const passwordDB: any[] | null = await Repositories.find(email);
+      if (passwordDB == null) {
+        return new AppError(404, "usuario invalido.");
+      }
+      const match: boolean = await bcrypt.compare(
+        password.toString(),
+        passwordDB[0].password
+      );
+      if (!match) {
+        return new AppError(404, "usuario invalido.");
+      }
+      return {};
+    } catch (error) {
+      return new AppError(500);
+    }
+  }
   async create(usuario: IUsuario): Promise<boolean | AppError> {
     try {
       const check = await Repositories.exist(usuario.email);

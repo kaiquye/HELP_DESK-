@@ -13,6 +13,7 @@ class Routes_usuario {
 
   Routes(): void {
     this.App.post("/novousuario", Controller.create);
+    this.App.post("/loginusuario", Controller.login);
   }
 }
 

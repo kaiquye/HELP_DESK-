@@ -7,9 +7,30 @@ import http from "http";
 interface Controller<T> {
   create(req: Request, res: Response): Promise<Response>;
   findAll(req: Request, res: Response): Promise<Response>;
+  login(req: Request, res: Response): Promise<Response>;
 }
 
 class ControllerUsuario implements Controller<IUsuario> {
+  async login(req: Request, res: Response): Promise<Response> {
+    try {
+      const response = await Services.login(req.body.email, req.body.password);
+      if (response instanceof AppError) {
+        return res
+          .status(Number(response.Status))
+          .json(response.getMessageError());
+      }
+        return res
+          .status(200)
+          .json({
+            ok: true,
+            message: 'usuario logado',
+            token : 
+          });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(new AppError(500).getMessageError());
+    }
+  }
   async create(req: Request, res: Response): Promise<Response> {
     try {
       if (!req.body) {
