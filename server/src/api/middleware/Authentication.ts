@@ -4,20 +4,25 @@ import http from "http";
 import "dotenv/config";
 
 interface IAuthentication {
-  auth(
+  authUsuario(
     req: Request,
     res: Response,
     next: NextFunction
   ): Response | NextFunction;
-  create(payload: object): JWT.Secret | boolean;
+  create(payload: IpayloadRole): JWT.Secret | boolean;
 }
 
+type IpayloadRole = {
+  email: string;
+  role: string | number;
+};
+
 class Authentication implements IAuthentication {
-  auth(
+  authUsuario(
     req: Request,
     res: Response,
     next: NextFunction
-  ): Response | NextFunction {
+  ): Response | NextFunction | any {
     const token = req.headers["authorization"];
     if (!token) {
       return res.status(401).json({
@@ -28,20 +33,23 @@ class Authentication implements IAuthentication {
     }
     try {
       const secret: string = process.env.SECRET || "";
-      const data = JWT.verify(token, secret);
-      console.log(data);
-      return res.send(200);
+      const { payload } = JWT.verify(token, secret);
+      next();
     } catch (error) {
+      console.log(error);
       return res.send(200);
     }
   }
-  create(payload: object): JWT.Secret | boolean {
+  create(payload: IpayloadRole): JWT.Secret | boolean {
     try {
       const secret: string = process.env.SECRET || "";
       const hash = JWT.sign({ payload }, secret, { expiresIn: "1800s" });
       return hash;
     } catch (error) {
+      console.log(error);
       return false;
     }
   }
 }
+
+export default new Authentication();

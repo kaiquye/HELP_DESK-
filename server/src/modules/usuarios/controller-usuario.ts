@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express";
+import http from "http";
+import Authentication from "../../api/middleware/Authentication";
 import AppError from "../models/AppError";
 import { IUsuario } from "./interface-usuario";
 import Services from "./services-usuario";
-import http from "http";
 
 interface Controller<T> {
   create(req: Request, res: Response): Promise<Response>;
@@ -19,13 +20,12 @@ class ControllerUsuario implements Controller<IUsuario> {
           .status(Number(response.Status))
           .json(response.getMessageError());
       }
-        return res
-          .status(200)
-          .json({
-            ok: true,
-            message: 'usuario logado',
-            token : 
-          });
+      const token = Authentication.create({ email: response, role: "usuario" });
+      return res.status(200).json({
+        ok: true,
+        message: "usuario logado",
+        token: token,
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json(new AppError(500).getMessageError());

@@ -7,11 +7,11 @@ interface Services<T> {
   create(usuario: T): Promise<boolean | AppError>;
   findAll(): Promise<T[]>;
   delete(id: number): Promise<boolean>;
-  login(email: string, password: string): Promise<object | AppError>;
+  login(email: string, password: string): Promise<string | AppError>;
 }
 
 class ServicesUsuario implements Services<IUsuario> {
-  async login(email: string, password: string): Promise<object | AppError> {
+  async login(email: string, password: string): Promise<string | AppError> {
     try {
       const passwordDB: any[] | null = await Repositories.find(email);
       if (passwordDB == null) {
@@ -24,7 +24,7 @@ class ServicesUsuario implements Services<IUsuario> {
       if (!match) {
         return new AppError(404, "usuario invalido.");
       }
-      return {};
+      return email;
     } catch (error) {
       return new AppError(500);
     }
