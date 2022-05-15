@@ -1,9 +1,20 @@
 import Services from "./services-administrador";
 import express, { Request, Response } from "express";
 import AppError from "../models/AppError";
+import { IAdministrador } from "./interface-administrador";
+import { ParamsDictionary } from "express-serve-static-core";
+import { ParsedQs } from "qs";
 
-class Controller_Administrador {
-  async NovoAdministrador(req: Request, res: Response): Promise<Response> {
+interface Controller<T> {
+  create(req: Request, res: Response): Promise<Response>;
+  findAll(req: Request, res: Response): Promise<Response>;
+}
+
+class Controller_Administrador implements Controller<IAdministrador> {
+  findAll(req: Request, res: Response): Promise<Response> {
+    throw new Error("Method not implemented.");
+  }
+  async create(req: Request, res: Response): Promise<Response> {
     try {
       if (!req.body) {
         return res.status(400).json({ ok: false, message: "invalid request" });
@@ -18,7 +29,7 @@ class Controller_Administrador {
       ) {
         return res.status(400).json({ ok: false, message: "invalid body" });
       }
-      const response: Boolean | AppError = await Services.NovoAdministrador(
+      const response: Boolean | AppError = await Services.create(
         req.body
       );
       if (response instanceof AppError) {

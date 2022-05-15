@@ -12,7 +12,7 @@ class Routes_chamdos {
   }
 
   Routes() {
-    this.App.post("/novochamado", Controller.NovoChamado);
+    this.App.post("/novochamado", Controller.create);
   }
 }
 

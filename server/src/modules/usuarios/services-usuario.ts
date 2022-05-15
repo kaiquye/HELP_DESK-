@@ -1,7 +1,7 @@
 import AppError from "../models/AppError";
 import { IUsuario } from "./interface-usuario";
 import Repositories from "./repositories-usuario";
-import 
+import bcrypt from "bcrypt";
 
 interface Services<T> {
   create(usuario: T): Promise<boolean | AppError>;
@@ -16,9 +16,14 @@ class ServicesUsuario implements Services<IUsuario> {
       if (check) {
         return new AppError(400, "email ja cadastrado");
       }
-      await Repositories.create(usuario);
+      const _usuario = usuario;
+      const salt = bcrypt.genSaltSync(10);
+      const crypt = bcrypt.hashSync(usuario.password.toString(), salt);
+      _usuario.password = crypt;
+      await Repositories.create(_usuario);
       return true;
     } catch (error) {
+      console.log(error);
       return new AppError(500);
     }
   }

@@ -3,8 +3,20 @@ import Repositories from "./repositories-chamados";
 import { IChamados } from "./interface-chamados";
 import { Knex } from "knex";
 
-class ServicesChamados {
-  async NovoChamado(chamado: IChamados): Promise<boolean | AppError> {
+interface Services<T> {
+  create(usuario: T): Promise<boolean | AppError>;
+  findAll(): Promise<T[]>;
+  delete(id: number): Promise<boolean>;
+}
+
+class ServicesChamados implements Services<IChamados> {
+  findAll(): Promise<IChamados[]> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: number): Promise<boolean> {
+    throw new Error("Method not implemented.");
+  }
+  async create(chamado: IChamados): Promise<boolean | AppError> {
     try {
       const check = await Repositories.exists(chamado.id_usuario);
       if (check) {
