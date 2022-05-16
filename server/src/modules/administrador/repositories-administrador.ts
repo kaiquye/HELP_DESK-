@@ -4,7 +4,7 @@ import connection from "../../config/database";
 // interface de lida
 interface Reader<T> {
   findAll(): Promise<T[]>;
-  findOne(id: string | number): Promise<T>;
+  findOne(email: string): Promise<null | any[]>;
   exists(id: string | number): Promise<boolean>;
 }
 
@@ -25,9 +25,17 @@ class repositories implements Repositories<IAdministrador> {
   findAll(): Promise<IAdministrador[]> {
     return connection("administrador");
   }
-  findOne(id: string | number): Promise<IAdministrador> {
-    throw new Error("Method not implemented.");
+  async findOne(email: string): Promise<null | any[]> {
+    const response = await connection("administrador")
+      .select("password")
+      .where("email", email);
+    if (response[0] === undefined) {
+      return null;
+    } else {
+      return response;
+    }
   }
+
   async exists(email: string): Promise<boolean> {
     const response = await connection("administrador")
       .select("email")

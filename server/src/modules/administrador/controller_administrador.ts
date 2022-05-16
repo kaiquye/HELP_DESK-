@@ -8,6 +8,7 @@ import { ParsedQs } from "qs";
 interface Controller<T> {
   create(req: Request, res: Response): Promise<Response>;
   findAll(req: Request, res: Response): Promise<Response>;
+  login(req: Request, res: Response): Promise<Response>;
 }
 
 class Controller_Administrador implements Controller<IAdministrador> {
@@ -29,9 +30,7 @@ class Controller_Administrador implements Controller<IAdministrador> {
       ) {
         return res.status(400).json({ ok: false, message: "invalid body" });
       }
-      const response: Boolean | AppError = await Services.create(
-        req.body
-      );
+      const response: Boolean | AppError = await Services.create(req.body);
       if (response instanceof AppError) {
         return res
           .status(Number(response.Status))
@@ -41,6 +40,17 @@ class Controller_Administrador implements Controller<IAdministrador> {
         ok: true,
         message: "Criado com sucesso",
       });
+    } catch (error) {
+      return res.status(500).json(new AppError(500).getMessageError());
+    }
+  }
+
+  async login(req: Request, res: Response): Promise<Response> {
+    try {
+      if (!req.body) {
+        return res.status(400).json({ ok: false, message: "invalid request" });
+      }
+      
     } catch (error) {
       return res.status(500).json(new AppError(500).getMessageError());
     }

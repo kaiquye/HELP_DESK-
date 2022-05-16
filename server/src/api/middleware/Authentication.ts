@@ -42,8 +42,13 @@ class Authentication implements IAuthentication {
       const { email, role } = JWT.verify(token, secret) as JwtPayload;
       if (role === "ADMIN") {
         return next();
+      } else {
+        return res
+          .status(401)
+          .json(
+            new AppError(401, "não tem permissão de usuario.").getMessageError()
+          );
       }
-      return res.status(401).json(new AppError(401).getMessageError());
     } catch (error) {
       console.log(error);
       return res.status(401).json(new AppError(401).getMessageError());
@@ -68,8 +73,13 @@ class Authentication implements IAuthentication {
       const { email, role } = JWT.verify(token, secret) as JwtPayload;
       if (role === "USUARIO") {
         return next();
+      } else {
+        return res
+          .status(401)
+          .json(
+            new AppError(401, "Não tem permissão de admin").getMessageError()
+          );
       }
-      return res.status(401).json(new AppError(401).getMessageError());
     } catch (error) {
       console.log(error);
       return res.status(401).json(new AppError(401).getMessageError());

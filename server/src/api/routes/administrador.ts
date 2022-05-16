@@ -11,8 +11,9 @@ class Routes_Administrador {
     this.Routes();
   }
 
-  Routes() {
+  private Routes() {
     this.App.post("/novoadministrador", Controller.create);
+    this.App.póst("/loginadministrador", Controller.login);
   }
 }
 
