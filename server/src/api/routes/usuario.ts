@@ -11,17 +11,18 @@ class Routes_usuario {
     this.App = Router();
     this.RouteLogin();
     this.Middleware();
-    this.Routes();
+    this.RoutesUsuarioParaAdmin();
   }
 
   private Middleware() {
-    // verificando se o nivel de acesso da pessoal é igual a a - USUARIO -
-    this.App.use(Authentication.authUsuario);
+    // verificando se o nivel de acesso da pessoal é igual: - ADMIN -
+    this.App.use(Authentication.authAdministrador);
   }
 
-  private Routes(): void {
-    // rotas protegidas
+  private RoutesUsuarioParaAdmin(): void {
+    // rotas de gerenciamento de usuarios protegidas, somente administradores.
     this.App.post("/novousuario", Controller.create);
+    this.App.get("/todosusuarios", Controller.findAll);
   }
   private RouteLogin(): void {
     // rota para o usuario conseguir se logar

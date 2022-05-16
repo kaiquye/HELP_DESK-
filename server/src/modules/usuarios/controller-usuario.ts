@@ -20,7 +20,7 @@ class ControllerUsuario implements Controller<IUsuario> {
           .status(Number(response.Status))
           .json(response.getMessageError());
       }
-      const token = Authentication.create({ email: response, role: "usuario" });
+      const token = Authentication.create({ email: response, role: "USUARIO" });
       return res.status(200).json({
         ok: true,
         message: "usuario logado",
