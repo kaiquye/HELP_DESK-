@@ -11,7 +11,7 @@ const ConfigCors = () => {
     optionsSuccessStatus: 200,
   };
   /**
-   * @description instacia do cors ja configurada.
+   * @description  cors ja configurada.
    */
   return Cors(Config);
 };
