@@ -5,4 +5,5 @@ export interface IUsuario {
   cargo: string;
   password: string;
   active: number;
+  idSetor: number;
 }

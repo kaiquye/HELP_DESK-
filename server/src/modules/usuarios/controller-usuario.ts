@@ -41,7 +41,8 @@ class ControllerUsuario implements Controller<IUsuario> {
         !req.body.email ||
         !req.body.tel ||
         !req.body.cargo ||
-        !req.body.password
+        !req.body.password || 
+        !req.body.idSetor
       ) {
         return res.status(400).json({ ok: false, message: "Invalid args" });
       }
