@@ -40,7 +40,7 @@ class Authentication implements IAuthentication {
     try {
       const secret: string = process.env.SECRET || "";
       const { email, role } = JWT.verify(token, secret) as JwtPayload;
-      if (role === "ADMIN") {
+      if (role === "USUARIO") {
         return next();
       } else {
         return res
@@ -71,7 +71,7 @@ class Authentication implements IAuthentication {
     try {
       const secret: string = process.env.SECRET || "";
       const { email, role } = JWT.verify(token, secret) as JwtPayload;
-      if (role === "USUARIO") {
+      if (role === "ADMIN") {
         return next();
       } else {
         return res

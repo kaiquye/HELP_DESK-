@@ -10,11 +10,12 @@ interface Controller<T> {
 
 class ControllerSetor implements Controller<ISetor> {
   async create(req: Request, res: Response): Promise<Response> {
-    if (req.body) {
+    console.log(req.body);
+    if (!req.body) {
       return res.status(400).json({ ok: false, message: "invalid args" });
     }
     if (!req.body.empresa || !req.body.setor || !req.body.tel) {
-      return res.status(400).json({ ok: false, message: "invalid args" });
+      return res.status(400).json({ ok: false, message: "invalid args2" });
     }
     try {
       const response: boolean | AppError = await Services.create({

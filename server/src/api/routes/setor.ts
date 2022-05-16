@@ -1,5 +1,5 @@
 const { Router } = require("express");
-import Controller from "../../modules/usuarios/controller-usuario";
+import Controller from "../../modules/setor/controller-setor";
 import Authentication from "../middleware/Authentication";
 
 import "dotenv/config";
