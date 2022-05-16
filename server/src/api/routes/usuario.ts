@@ -9,16 +9,22 @@ class Routes_usuario {
 
   constructor() {
     this.App = Router();
+    this.RouteLogin();
     this.Middleware();
     this.Routes();
   }
 
   private Middleware() {
+    // verificando se o nivel de acesso da pessoal é igual a a - USUARIO -
     this.App.use(Authentication.authUsuario);
   }
 
   private Routes(): void {
+    // rotas protegidas
     this.App.post("/novousuario", Controller.create);
+  }
+  private RouteLogin(): void {
+    // rota para o usuario conseguir se logar
     this.App.post("/loginusuario", Controller.login);
   }
 }
