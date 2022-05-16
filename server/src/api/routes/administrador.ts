@@ -13,7 +13,7 @@ class Routes_Administrador {
 
   private Routes() {
     this.App.post("/novoadministrador", Controller.create);
-    this.App.póst("/loginadministrador", Controller.login);
+    this.App.post("/loginadministrador", Controller.login);
   }
 }
 

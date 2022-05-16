@@ -2,8 +2,7 @@ import Services from "./services-administrador";
 import express, { Request, Response } from "express";
 import AppError from "../models/AppError";
 import { IAdministrador } from "./interface-administrador";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
+import Authentication from "../../api/middleware/Authentication";
 
 interface Controller<T> {
   create(req: Request, res: Response): Promise<Response>;
@@ -50,7 +49,27 @@ class Controller_Administrador implements Controller<IAdministrador> {
       if (!req.body) {
         return res.status(400).json({ ok: false, message: "invalid request" });
       }
-      
+      if (!req.body.email || !req.body.password) {
+        return res.status(400).json({ ok: false, message: "invalid args" });
+      }
+      const response: string | AppError = await Services.login(
+        req.body.email,
+        req.body.password
+      );
+      if (response instanceof AppError) {
+        return res
+          .status(Number(response.Status))
+          .json(response.getMessageError());
+      }
+      const token = Authentication.create({ role: "ADMIN", email: response });
+      if (!token) {
+        return res
+          .status(400)
+          .json({ ok: false, message: "error in authtentication." });
+      }
+      return res
+        .status(200)
+        .json({ ok: true, message: "admin logado com sucesso", token });
     } catch (error) {
       return res.status(500).json(new AppError(500).getMessageError());
     }
