@@ -5,6 +5,7 @@ import Routes_Chamados from "./routes/chamados";
 import Routes_Usuario from "./routes/usuario";
 import Routes_Setor from "./routes/setor";
 import HelmetConfig from "./middleware/helmet";
+import { Response, Request, NextFunction, ErrorRequestHandler } from "express";
 
 class Main {
   public App;
@@ -13,6 +14,7 @@ class Main {
     this.App = express();
     this.Middleware();
     this.Routes();
+    this.exceptionHandler();
   }
 
   private Middleware(): void {
@@ -26,6 +28,22 @@ class Main {
     this.App.use("/chamado", Routes_Chamados);
     this.App.use("/usuario", Routes_Usuario);
     this.App.use("/setor", Routes_Setor);
+  }
+  private exceptionHandler() {
+    this.App.use(
+      async (
+        err: any | ErrorRequestHandler,
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ) => {
+        console.log(process.env.NODE_ENV);
+        if (process.env.NODE_ENV === "development") {
+          return res.status(500).json({ testdasdasdasdasdase: err });
+        }
+        return res.status(500).json({ error: "Internal server error" });
+      }
+    );
   }
 }
 module.exports = new Main().App;
