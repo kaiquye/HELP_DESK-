@@ -29,6 +29,7 @@ class Main {
     this.App.use("/usuario", Routes_Usuario);
     this.App.use("/setor", Routes_Setor);
   }
+  
   private exceptionHandler() {
     this.App.use(
       async (
