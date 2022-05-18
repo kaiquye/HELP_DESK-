@@ -5,7 +5,7 @@ import { Knex } from "knex";
 
 interface Services<T> {
   create(usuario: T): Promise<boolean | AppError>;
-  findAll(): Promise<T[]>;
+  findAll(): Promise<T[] | null | AppError>;
   delete(id: number): Promise<boolean>;
   find(id: number): Promise<T[] | null | AppError>;
 }
@@ -14,11 +14,12 @@ class ServicesChamados implements Services<IChamados> {
   async find(id: number): Promise<IChamados[] | null | AppError> {
     try {
       const response = await Repositories.find(id);
+      console.log(response)
       if (response[0] === undefined) {
         return null;
       }
 
-      let status_chamado = "inativo";
+      let status_chamado = "s";
 
       if (response[0].status === "10") {
         status_chamado = "em espera";
@@ -29,6 +30,7 @@ class ServicesChamados implements Services<IChamados> {
       if (response[0].status === "100") {
         status_chamado = "finalizado";
       }
+      
 
       return [
         {
@@ -45,8 +47,17 @@ class ServicesChamados implements Services<IChamados> {
       return new AppError(500, "Não foi possivel criar um novo chamado");
     }
   }
-  findAll(): Promise<IChamados[]> {
-    throw new Error("Method not implemented.");
+  async findAll(): Promise<IChamados[] | null | AppError> {
+    try {
+      const response = await Repositories.findAll();
+      if (response[0] === undefined) {
+        return null;
+      }
+      return response;
+    } catch (error) {
+      console.log(error);
+      return new AppError(500, "Não foi possivel criar um novo chamado");
+    }
   }
   delete(id: number): Promise<boolean> {
     throw new Error("Method not implemented.");

@@ -20,6 +20,7 @@ class Routes_chamdos {
 
   private Routes(): void {
     this.App.post("/novochamado", Controller.create);
+    this.App.post("/buscarchamado", Controller.find); // ENVIAR O ID PELA QUERY
   }
 }
 

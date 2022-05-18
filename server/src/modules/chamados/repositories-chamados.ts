@@ -24,7 +24,14 @@ type Repositories<T> = Reader<T> & Write<T>;
 class RepositoriesChamados implements Repositories<IChamados> {
   async find(id: number): Promise<IChamados[]> {
     return await database("CHAMADOS")
-      .select("mensagem, resumo, status, prioridade, id_adm, id_usuario")
+      .select(
+        "mensagem",
+        "resumo",
+        "status",
+        "prioridade",
+        "id_adm",
+        "id_usuario"
+      )
       .where("idChamados", id);
   }
   async create(chamado: IChamados): Promise<number[]> {

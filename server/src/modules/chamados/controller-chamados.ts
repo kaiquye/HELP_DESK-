@@ -7,22 +7,33 @@ import Services from "./services-chamados";
 
 interface Controller<T> {
   create(req: Request, res: Response): Promise<Response>;
-  findAll(req: Request, res: Response): Promise<Response>;
+  find(req: Request, res: Response): Promise<Response>;
 }
 
 class ControllerChamados implements Controller<IChamados> {
-  findAll(
-    req: express.Request<
-      ParamsDictionary,
-      any,
-      any,
-      ParsedQs,
-      Record<string, any>
-    >,
-    res: express.Response<any, Record<string, any>>
-  ): Promise<express.Response<any, Record<string, any>>> {
-    throw new Error("Method not implemented.");
+  async find(req: Request, res: Response): Promise<Response> {
+    try {
+      if (req.query.id_chamado) {
+        const response_by_id = await Services.find(
+          Number(req.query.id_chamado)
+        );
+        return res.status(200).json({
+          ok: true,
+          message: "Retornando o chamado do ID : " + req.query.id_chamado,
+          data: response_by_id,
+        });
+      }
+      const response_all = await Services.findAll();
+      return res.status(200).json({
+        ok: true,
+        message: "Retornando todos os chamados : " + req.query.id_chamado,
+        data: response_all,
+      });
+    } catch (error) {
+      return res.status(500).json(new AppError(500).getMessageError());
+    }
   }
+
   async create(req: Request, res: Response): Promise<Response> {
     try {
       console.log(req.body);
