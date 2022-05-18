@@ -2,7 +2,7 @@ import Services from "./services-administrador";
 import express, { Request, Response } from "express";
 import AppError from "../models/AppError";
 import { IAdministrador } from "./interface-administrador";
-import Authentication from "../../api/middleware/Authentication";
+import Authentication from "../../middleware/Authentication";
 
 interface Controller<T> {
   create(req: Request, res: Response): Promise<Response>;

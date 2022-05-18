@@ -2,7 +2,7 @@ import JWT, { Jwt, Secret } from "jsonwebtoken";
 import express, { NextFunction, Request, Response } from "express";
 import http from "http";
 import "dotenv/config";
-import AppError from "../../modules/models/AppError";
+import AppError from "../modules/models/AppError";
 
 interface IAuthentication {
   authUsuario(
@@ -29,14 +29,20 @@ class Authentication implements IAuthentication {
     res: Response,
     next: NextFunction
   ): Response | NextFunction | any {
-    const token = req.headers["authorization"];
-    if (!token) {
+    const authorization = req.headers["authorization"];
+
+    if (!authorization) {
       return res.status(401).json({
         ok: false,
         status_code: http.STATUS_CODES[401],
         message: "token não infomado",
       });
     }
+
+    const [, token] = authorization.split(" ");
+
+    console.log(token);
+
     try {
       const secret: string = process.env.SECRET || "";
       const { email, role } = JWT.verify(token, secret) as JwtPayload;
@@ -60,14 +66,20 @@ class Authentication implements IAuthentication {
     res: Response,
     next: NextFunction
   ): Response | NextFunction | any {
-    const token = req.headers["authorization"];
-    if (!token) {
+    const authorization = req.headers["authorization"];
+
+    if (!authorization) {
       return res.status(401).json({
         ok: false,
         status_code: http.STATUS_CODES[401],
         message: "token não infomado",
       });
     }
+
+    const [, token] = authorization.split(" ");
+
+    console.log(token);
+
     try {
       const secret: string = process.env.SECRET || "";
       const { email, role } = JWT.verify(token, secret) as JwtPayload;

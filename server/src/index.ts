@@ -1,3 +1,3 @@
-const Server = require("../src/api/Main");
+const Server = require("./Server");
 
 Server.listen(8080, () => console.log("running"));

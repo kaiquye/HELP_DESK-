@@ -5,6 +5,8 @@ import Routes_Chamados from "./routes/chamados";
 import Routes_Usuario from "./routes/usuario";
 import Routes_Setor from "./routes/setor";
 import HelmetConfig from "./middleware/helmet";
+import swaggerUi from "swagger-ui-express";
+import swaggerDoc from "./swagger.json";
 import { Response, Request, NextFunction, ErrorRequestHandler } from "express";
 
 class Main {
@@ -18,6 +20,8 @@ class Main {
   }
 
   private Middleware(): void {
+    this.App.use("/api-docs", swaggerUi.serve);
+    this.App.get("/api-docs", swaggerUi.setup(swaggerDoc));
     this.App.use(express.json());
     this.App.use(ConfigCors());
     this.App.use(HelmetConfig());
@@ -29,7 +33,7 @@ class Main {
     this.App.use("/usuario", Routes_Usuario);
     this.App.use("/setor", Routes_Setor);
   }
-  
+
   private exceptionHandler() {
     this.App.use(
       async (
@@ -40,11 +44,12 @@ class Main {
       ) => {
         console.log(process.env.NODE_ENV);
         if (process.env.NODE_ENV === "development") {
-          return res.status(500).json({ testdasdasdasdasdase: err });
+          return res.status(500).json({ error: err });
         }
         return res.status(500).json({ error: "Internal server error" });
       }
     );
   }
 }
+
 module.exports = new Main().App;

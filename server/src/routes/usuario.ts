@@ -1,14 +1,15 @@
 const { Router } = require("express");
-import Controller from "../../modules/setor/controller-setor";
+import Controller from "../modules/usuarios/controller-usuario";
 import Authentication from "../middleware/Authentication";
 
 import "dotenv/config";
 
-class Routes_Setor {
+class Routes_usuario {
   public App;
 
   constructor() {
     this.App = Router();
+    this.RouteLogin();
     this.Middleware();
     this.RoutesUsuarioParaAdmin();
   }
@@ -20,8 +21,13 @@ class Routes_Setor {
 
   private RoutesUsuarioParaAdmin(): void {
     // rotas de gerenciamento de usuarios protegidas, somente administradores.
-    this.App.post("/novosetor", Controller.create);
+    this.App.post("/novousuario", Controller.create);
+    this.App.get("/todosusuarios", Controller.findAll);
+  }
+  private RouteLogin(): void {
+    // rota para o usuario conseguir se logar
+    this.App.post("/loginusuario", Controller.login);
   }
 }
 
-export default new Routes_Setor().App;
+export default new Routes_usuario().App;

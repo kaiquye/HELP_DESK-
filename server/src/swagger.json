@@ -1,0 +1,103 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "documentação da api do help-desk",
+    "description": "Documentação da API do helpDesk",
+    "version": "0.0.1"
+  },
+
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "API URL"
+    }
+  ],
+
+  "paths": {
+    "/administrador/novoadministrador": {
+      "post": {
+        "summary": "novo admin",
+        "description": "cadastrando um novo admin",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Administrador"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "invalid request"
+          },
+          "409": {
+            "description": "already exists"
+          },
+          "201": {
+            "description": "created",
+            "content ": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "ok": "boolean",
+                    "message": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }, 
+    "/administrador/novoadministrador": {
+      
+    }
+  },
+  "components": {
+    "schemas": {
+      "Administrador": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Kaic"
+          },
+          "cargo": {
+            "type": "string",
+            "example": "Estagiario"
+          },
+          "password": {
+            "type": "string",
+            "example": "minhasenha"
+          },
+          "email": {
+            "type": "string",
+            "example": "kaiquemendesilva82@gmail.com"
+          },
+          "tel": {
+            "type": "number",
+            "example": "81114922"
+          },
+          "active": {
+            "type": "number",
+            "example": "1"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormart": "JWT"
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import http from "http";
-import Authentication from "../../api/middleware/Authentication";
+import Authentication from "../../middleware/Authentication";
 import AppError from "../models/AppError";
 import { IUsuario } from "./interface-usuario";
 import Services from "./services-usuario";

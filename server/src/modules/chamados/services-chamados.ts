@@ -46,7 +46,7 @@ class ServicesChamados implements Services<IChamados> {
       if (response[0] === undefined) {
         return null;
       }
-      let status_chamado = "s";
+      let status_chamado = "sem status";
 
       if (response[0].status === "10") {
         status_chamado = "em espera";
@@ -57,6 +57,7 @@ class ServicesChamados implements Services<IChamados> {
       if (response[0].status === "100") {
         status_chamado = "finalizado";
       }
+      
       return [
         {
           mensagem: response[0].mensagem,

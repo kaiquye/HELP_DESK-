@@ -35,7 +35,7 @@ class Services_Administrador implements Services<IAdministrador> {
   async create(administrador: IAdministrador): Promise<boolean | AppError> {
     try {
       const check = await repositories.exists(administrador.email);
-      if (check) return new AppError(400, "Usuario ja cadastrado");
+      if (check) return new AppError(409, "Usuario ja cadastrado");
       const salt = bcrypt.genSaltSync(10);
       const crypt = bcrypt.hashSync(administrador.password.toString(), salt);
       administrador.password = crypt;

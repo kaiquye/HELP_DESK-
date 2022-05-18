@@ -6,7 +6,7 @@ const ConfigCors = () => {
    */
   const Config = {
     origin: "*",
-    methods: "GET,POST",
+    methods: "GET,POST, PATCH, DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 200,
   };

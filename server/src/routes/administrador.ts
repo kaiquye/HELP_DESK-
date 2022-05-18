@@ -1,5 +1,5 @@
 const { Router } = require("express");
-import Controller from "../../modules/administrador/controller_administrador";
+import Controller from "../modules/administrador/controller_administrador";
 import Authentication from "../middleware/Authentication";
 
 import "dotenv/config";
@@ -10,7 +10,6 @@ class Routes_Administrador {
   constructor() {
     this.App = Router();
     this.RouteLogin();
-    
     this.Middleware();
     this.Routes();
   }
