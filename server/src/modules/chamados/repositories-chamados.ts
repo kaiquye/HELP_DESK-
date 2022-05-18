@@ -8,6 +8,8 @@ interface Reader<T> {
   findAll(): Promise<T[]>;
   findOne(id: string | number): Promise<T>;
   exists(id: string | number): Promise<boolean>;
+  findWithResponsibleByAdmin(id: number): Promise<T[]>;
+  WithResponsible(): Promise<T[]>;
 }
 
 // interface para escrita
@@ -22,6 +24,30 @@ type Repositories<T> = Reader<T> & Write<T>;
 
 // class repositorio implementando o tipo de escrita e lida
 class RepositoriesChamados implements Repositories<IChamados> {
+  async WithResponsible(): Promise<IChamados[]> {
+    return await database("CHAMADOS")
+      .select(
+        "mensagem",
+        "resumo",
+        "status",
+        "prioridade",
+        "id_adm",
+        "id_usuario"
+      )
+      .whereNot("id_admin", null);
+  }
+  async findWithResponsibleByAdmin(id: number): Promise<IChamados[]> {
+    return await database("CHAMADOS")
+      .select(
+        "mensagem",
+        "resumo",
+        "status",
+        "prioridade",
+        "id_adm",
+        "id_usuario"
+      )
+      .where("id_admin", id);
+  }
   async find(id: number): Promise<IChamados[]> {
     return await database("CHAMADOS")
       .select(

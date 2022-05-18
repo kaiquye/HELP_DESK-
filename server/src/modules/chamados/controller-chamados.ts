@@ -8,9 +8,33 @@ import Services from "./services-chamados";
 interface Controller<T> {
   create(req: Request, res: Response): Promise<Response>;
   find(req: Request, res: Response): Promise<Response>;
+  withResponsible(req: Request, res: Response): Promise<Response>;
 }
 
 class ControllerChamados implements Controller<IChamados> {
+  async withResponsible(req: Request, res: Response): Promise<Response> {
+    try {
+      if (req.query.id_admin) {
+        const response = await Services.withResponsibleByAdmin(
+          Number(req.query.id_adm)
+        );
+        return res.status(200).json({
+          ok: true,
+          message:
+            "todos chamados que estão sendo atendidos pelo " + req.query.id_adm,
+          data: response,
+        });
+      }
+      const response = await Services.withResponsible();
+      return res.status(200).json({
+        ok: true,
+        message: "todos registros com um responsavel ( em andamento )",
+        data: response,
+      });
+    } catch (error) {
+      return res.status(500).json(new AppError(500).getMessageError());
+    }
+  }
   async find(req: Request, res: Response): Promise<Response> {
     try {
       if (req.query.id_chamado) {

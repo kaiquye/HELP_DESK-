@@ -8,17 +8,44 @@ interface Services<T> {
   findAll(): Promise<T[] | null | AppError>;
   delete(id: number): Promise<boolean>;
   find(id: number): Promise<T[] | null | AppError>;
+  withResponsibleByAdmin(id: number): Promise<T[] | null | AppError>;
+  withResponsible(): Promise<T[] | null | AppError>;
 }
 
 class ServicesChamados implements Services<IChamados> {
-  async find(id: number): Promise<IChamados[] | null | AppError> {
+  async withResponsible(): Promise<IChamados[] | AppError | null> {
     try {
-      const response = await Repositories.find(id);
-      console.log(response)
+      const response = await Repositories.WithResponsible();
+      if (response === undefined) {
+        return null;
+      }
+      return response;
+    } catch (error) {
+      console.log(error);
+      return new AppError(500, "Não foi possivel criar um novo chamado");
+    }
+  }
+  async withResponsibleByAdmin(
+    id: number
+  ): Promise<IChamados[] | AppError | null> {
+    try {
+      const response = await Repositories.findWithResponsibleByAdmin(id);
       if (response[0] === undefined) {
         return null;
       }
-
+      return response;
+    } catch (error) {
+      console.log(error);
+      return new AppError(500, "Não foi possivel criar um novo chamado");
+    }
+  }
+  async find(id: number): Promise<IChamados[] | null | AppError> {
+    try {
+      const response = await Repositories.find(id);
+      console.log(response);
+      if (response[0] === undefined) {
+        return null;
+      }
       let status_chamado = "s";
 
       if (response[0].status === "10") {
@@ -30,8 +57,6 @@ class ServicesChamados implements Services<IChamados> {
       if (response[0].status === "100") {
         status_chamado = "finalizado";
       }
-      
-
       return [
         {
           mensagem: response[0].mensagem,

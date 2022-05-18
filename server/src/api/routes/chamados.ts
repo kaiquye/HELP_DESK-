@@ -10,7 +10,7 @@ class Routes_chamdos {
   constructor() {
     this.App = Router();
     this.Middleware();
-    this.Routes();
+    this.RoutesUsuario();
   }
 
   private Middleware(): void {
@@ -18,9 +18,14 @@ class Routes_chamdos {
     this.App.use(Authentication.authUsuario);
   }
 
-  private Routes(): void {
+  private RoutesUsuario(): void {
     this.App.post("/novochamado", Controller.create);
     this.App.post("/buscarchamado", Controller.find); // ENVIAR O ID PELA QUERY
+  }
+
+  private RoutesAdmin(): void {
+    this.App.post("/buscarchamadosemaberto", Controller.withResponsible
+    );
   }
 }
 
