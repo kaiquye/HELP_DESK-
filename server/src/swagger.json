@@ -18,6 +18,7 @@
       "post": {
         "summary": "novo admin",
         "description": "cadastrando um novo admin",
+        "tags": ["Administrador"],
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
@@ -60,6 +61,7 @@
       "post": {
         "summary": "login admin",
         "description": "login admin",
+        "tags": ["Administrador"],
         "requestBody": {
           "required": true,
           "content": {
@@ -99,8 +101,67 @@
           }
         }
       }
-    }, 
-    
+    },
+    "/chamados/novochamado": {
+      "post": {
+        "summary": "abri um novo chamado",
+        "description": "Essa rota é responsavel por abri um novo chamado. Apenas pessoas com cargo de usuario podem abri um novo chamado.",
+        "tags": ["Chamado"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Chamado"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "invalid request"
+          },
+          "409": {
+            "description": "already exists"
+          },
+          "201": {
+            "description": "created"
+          }
+        }
+      }
+    },
+    "/chamados/buscarchamado": {
+      "post": {
+        "summary": "Buscar um chamado existente",
+        "description": "Essa rota é responsavel por buscar um chamado.",
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Chamado"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Chamado"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "invalid request"
+          },
+          "201": {
+            "description": "created"
+          }
+        }
+      }
+    }
   },
   "components": {
     "schemas": {
@@ -137,12 +198,41 @@
         "type": "object",
         "properties": {
           "email": {
-            "email": "string",
+            "type": "string",
             "example": "kaico@gmail.com"
           },
           "password": {
-            "email": "string",
+            "type": "string",
             "example": "senha"
+          }
+        }
+      },
+      "Chamado": {
+        "type": "object",
+        "propertie": {
+          "mensagem": {
+            "type": "string",
+            "example": "Sem internet"
+          },
+          "resumo": {
+            "type": "string",
+            "example": "Segundo andar"
+          },
+          "status": {
+            "type": "string",
+            "example": "10"
+          },
+          "prioridade": {
+            "type": "number",
+            "example": "1"
+          },
+          "id_usuario": {
+            "type": "number",
+            "example": "1"
+          },
+          "id_admin": {
+            "type": "number",
+            "example": "1"
           }
         }
       }
