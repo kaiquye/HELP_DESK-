@@ -135,19 +135,17 @@
     },
     "/chamados/buscarchamado": {
       "post": {
-        "summary": "Buscar um chamado existente",
-        "description": "Essa rota é responsavel por buscar um chamado.",
+        "summary": "Buscar um chamado ou buscar todos chamados",
+        "description": "Essa rota é responsavel por buscar um chamado quando é passado na query o parametro ou buscar todos.",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Chamado"],
+        "parameters": {
+          "in": "query",
+          "name": "id_chamado",
+          "type": "string"
+        },
         "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Chamado"
-              }
-            }
-          }
+          "required": false
         },
         "responses": {
           "401": {
@@ -231,6 +229,15 @@
             "example": "1"
           },
           "id_admin": {
+            "type": "number",
+            "example": "1"
+          }
+        }
+      },
+      "ChamadoBuscar": {
+        "type": "object",
+        "propertie": {
+          "id_chamado": {
             "type": "number",
             "example": "1"
           }
