@@ -1,12 +1,13 @@
 import database from "../../config/database";
 import { IChamados } from "./interface-chamados";
 import Knex from "knex";
+import { IUsuario } from "../usuarios/interface-usuario";
 
 // interface de lida
 interface Reader<T> {
   find(id: number): Promise<T[]>;
   findAll(): Promise<T[]>;
-  findOne(id: string | number): Promise<T>;
+  findOne(id: string | number): Promise<IUsuario[]>;
   exists(id: string | number): Promise<boolean>;
   findWithResponsibleByAdmin(id: number): Promise<T[]>;
   WithResponsible(): Promise<T[]>;
@@ -14,7 +15,7 @@ interface Reader<T> {
 
 // interface para escrita
 interface Write<T> {
-  create(chamado: IChamados): Promise<number[]>;
+  create(chamado: IChamados): Promise<void>;
   delete(id: number): Promise<void>;
   update(chamado: IChamados): Promise<void>;
 }
@@ -60,8 +61,8 @@ class RepositoriesChamados implements Repositories<IChamados> {
       )
       .where("idChamados", id);
   }
-  async create(chamado: IChamados): Promise<number[]> {
-    return await database("CHAMADOS").insert(chamado);
+  async create(chamado: IChamados): Promise<void> {
+    await database("CHAMADOS").insert(chamado);
   }
   async delete(id: number): Promise<void> {
     await database("CHAMADOS").del().where("idCHAMADOS", id);
@@ -75,8 +76,10 @@ class RepositoriesChamados implements Repositories<IChamados> {
     const response = await database("CHAMADOS");
     return response;
   }
-  async findOne(id: string | number): Promise<IChamados> {
-    throw new Error("Method not implemented.");
+  async findOne(id: string | number): Promise<IUsuario[]> {
+    return database("usuario")
+      .select("nome", "email", "tel", "cargo", "active", "idSetor")
+      .where("idUSUARIO", id);
   }
   async exists(id: number): Promise<boolean> {
     const exists: any = await database("CHAMADOS")

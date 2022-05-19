@@ -30,7 +30,7 @@ class Authentication implements IAuthentication {
     next: NextFunction
   ): Response | NextFunction | any {
     const authorization = req.headers["authorization"];
-
+    console.log('--',authorization)
     if (!authorization) {
       return res.status(401).json({
         ok: false,
@@ -41,7 +41,7 @@ class Authentication implements IAuthentication {
 
     const [, token] = authorization.split(" ");
 
-    console.log(token);
+    console.log('--',token);
 
     try {
       const secret: string = process.env.SECRET || "";

@@ -1,7 +1,8 @@
 import AppError from "../models/AppError";
 import Repositories from "./repositories-chamados";
 import { IChamados } from "./interface-chamados";
-import { Knex } from "knex";
+import SendEmail from "../../email/novoChamado/index";
+import Nodemailer from "nodemailer";
 
 interface Services<T> {
   create(usuario: T): Promise<boolean | AppError>;
@@ -19,6 +20,7 @@ class ServicesChamados implements Services<IChamados> {
       if (response === undefined) {
         return null;
       }
+
       return response;
     } catch (error) {
       console.log(error);
@@ -57,7 +59,7 @@ class ServicesChamados implements Services<IChamados> {
       if (response[0].status === "100") {
         status_chamado = "finalizado";
       }
-      
+
       return [
         {
           mensagem: response[0].mensagem,
@@ -95,6 +97,12 @@ class ServicesChamados implements Services<IChamados> {
         return new AppError(400, "Você ja tem um chamado em aberto");
       }
       await Repositories.create(chamado);
+      const usuario = await Repositories.findOne(chamado.id_usuario);
+      const email = new SendEmail(
+        usuario[0].email.toString(),
+        `Você acaba de abri um novo chamado : ${chamado.resumo} `
+      );
+      await email.sendEmail();
       return true;
     } catch (error) {
       console.log(error);
