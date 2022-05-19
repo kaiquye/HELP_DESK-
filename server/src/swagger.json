@@ -55,10 +55,52 @@
           }
         }
       }
+    },
+    "/administrador/loginadministrador": {
+      "post": {
+        "summary": "login admin",
+        "description": "login admin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginAdmin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "invalid request"
+          },
+          "404": {
+            "description": "Invalid user"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Token": {
+                        "example": "jwt"
+                      },
+                      "ok": {
+                        "example": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }, 
-    "/administrador/novoadministrador": {
-
-    }
+    
   },
   "components": {
     "schemas": {
@@ -88,6 +130,19 @@
           "active": {
             "type": "number",
             "example": "1"
+          }
+        }
+      },
+      "LoginAdmin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "email": "string",
+            "example": "kaico@gmail.com"
+          },
+          "password": {
+            "email": "string",
+            "example": "senha"
           }
         }
       }
