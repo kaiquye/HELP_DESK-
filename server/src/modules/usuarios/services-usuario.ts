@@ -1,6 +1,7 @@
 import AppError from "../models/AppError";
 import { IUsuario } from "./interface-usuario";
 import Repositories from "./repositories-usuario";
+import sendEmail from "../../email/novaConta/index";
 import bcrypt from "bcrypt";
 
 interface Services<T> {
@@ -40,6 +41,8 @@ class ServicesUsuario implements Services<IUsuario> {
       const crypt = bcrypt.hashSync(usuario.password.toString(), salt);
       _usuario.password = crypt;
       await Repositories.create(_usuario);
+      const email = new sendEmail(usuario.email, usuario.nome);
+      await email.sendEmail();
       return true;
     } catch (error) {
       console.log(error);
