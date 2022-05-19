@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "documentação da api do help-desk",
+    "title": "API HELP-DESK 🍀",
     "description": "Documentação da API do helpDesk",
     "version": "0.0.1"
   },
@@ -57,7 +57,7 @@
       }
     }, 
     "/administrador/novoadministrador": {
-      
+
     }
   },
   "components": {
