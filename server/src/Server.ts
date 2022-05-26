@@ -51,5 +51,5 @@ class Main {
     );
   }
 }
-
-module.exports = new Main().App;
+ 
+export default new Main().App;
